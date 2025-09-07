@@ -1,0 +1,12 @@
+@font-face {
+  font-family: "Press Start 2P";
+  src: url("./assets//fonts/PressStart2P-Regular.ttf");
+}
+
+#canvas {
+  background: white;
+}
+
+body {
+  background: black;
+}
