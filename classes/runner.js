@@ -6,7 +6,7 @@ class Runner {
     static g = 0.3
     static groundLevel = 200
     static vy = 3
-    static endOfScreen = 720;
+    static endOfScreen = 1030;
 
     constructor() {
         Runner.runnerImg.src = "../assets/dino_right_run.png"
@@ -38,7 +38,12 @@ class Runner {
     }
     // Move forward 
     run(ctx) {
-        // Switch betw een state pics every 1s 
+        // Switch between running frames
+        if (Math.floor(Date.now() / 100) % 2 === 0) {
+            Runner.runnerImg.src = "../assets/dino_right_run.png";
+        } else {
+            Runner.runnerImg.src = "../assets/dino_left_run.png";
+        }
         Runner.px += 2
         if(Runner.px > Runner.endOfScreen){
             Runner.px = 20
@@ -49,6 +54,10 @@ class Runner {
         if (Runner.py === Runner.groundLevel) {
             Runner.vy = -8;
         }
+    }
+
+    duck(){
+        Runner.runnerImg.src = "../assets/ducking_dino.png"
     }
 }
 
