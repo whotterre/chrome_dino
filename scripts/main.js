@@ -2,23 +2,21 @@ import Runner from "../classes/runner.js"
 let runner;
 
 // World level variables
-let score = 0;
-let hiScore = 0;
 let groundLevel = 200; 
 document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.querySelector("canvas")
   const ctx = canvas.getContext("2d")
 
-
+    // Draw the runner 
+  runner = new Runner()
+  runner.initialDraw(ctx)
 
   // Place the score data at the top right of the canvas or the world
   ctx.font = '10px "Press Start 2P"';
-  ctx.fillText(`Hi ${String(hiScore).padStart('5', 0)}`, 900, 30)
-  ctx.fillText(`${String(score).padStart('5', 0)}`, 990, 30)
+  ctx.fillText(`Hi ${String(runner.hiScore).padStart('5', 0)}`, 900, 30)
+  ctx.fillText(`${String(runner.score).padStart('5', 0)}`, 990, 30)
 
-  // Draw the runner 
-  runner = new Runner()
-  runner.initialDraw(ctx)
+
 
   gameLoop(ctx)
 })
@@ -54,8 +52,8 @@ function gameLoop(ctx) {
 
   // Redraw score
   ctx.font = '10px "Press Start 2P"';
-  ctx.fillText(`Hi ${String(hiScore).padStart('5', 0)}`, 900, 30);
-  ctx.fillText(`${String(score).padStart('5', 0)}`, 990, 30);
+  ctx.fillText(`Hi ${String(Runner.hiScore).padStart('5', 0)}`, 900, 30);
+  ctx.fillText(`${String(Runner.score).padStart('5', 0)}`, 990, 30);
 
   // Draw runner
   if (runner) {

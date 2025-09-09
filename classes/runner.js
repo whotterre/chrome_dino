@@ -2,11 +2,13 @@
 class Runner {
     static px;
     static py;
-    static runnerImg = new Image();
+    static runnerImg = new Image()
     static g = 0.3
     static groundLevel = 200
     static vy = 3
-    static endOfScreen = 1030;
+    static endOfScreen = 1030
+    static score = 0
+    static hiScore = 0
 
     constructor() {
         Runner.runnerImg.src = "../assets/dino_right_run.png"
@@ -44,6 +46,7 @@ class Runner {
         } else {
             Runner.runnerImg.src = "../assets/dino_left_run.png";
         }
+        Runner.score += 1
         Runner.px += 2
         if(Runner.px > Runner.endOfScreen){
             Runner.px = 20
