@@ -1,15 +1,23 @@
+import Enemy from "../classes/enemy.js";
 import Runner from "../classes/runner.js"
 let runner;
-
 // World level variables
-let groundLevel = 200; 
+let groundLevel = 200;
+let enemies = [];
+let lastSpawnTime = 0;
+const SPAWN_INTERVAL = 2000; // Spawn every 2 seconds
 document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.querySelector("canvas")
   const ctx = canvas.getContext("2d")
 
-    // Draw the runner 
+  // Draw the runner 
   runner = new Runner()
   runner.initialDraw(ctx)
+
+
+  // Draw the enemies 
+  enemies = [];
+
 
   // Place the score data at the top right of the canvas or the world
   ctx.font = '10px "Press Start 2P"';
@@ -28,7 +36,7 @@ document.addEventListener("keydown", (e) => {
     if (runner) runner.jump();
   }
 
-  if(e.code === "ArrowDown") {
+  if (e.code === "ArrowDown") {
     if (runner) runner.duck();
   }
 })
@@ -50,20 +58,37 @@ function gameLoop(ctx) {
   // Clear canvas
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-  // Redraw score
-  ctx.font = '10px "Press Start 2P"';
-  ctx.fillText(`Hi ${String(Runner.hiScore).padStart('5', 0)}`, 900, 30);
-  ctx.fillText(`${String(Runner.score).padStart('5', 0)}`, 990, 30);
+  // Draw ground first
+  drawGround(ctx, ctx.canvas.width, 250);
 
-  // Draw runner
-  if (runner) {
-    runner.initialDraw(ctx);
+  // Spawn enemies
+  const currentTime = Date.now();
+  if (currentTime - lastSpawnTime > SPAWN_INTERVAL) {
+      const type = Math.random() < 0.5 ? "pterodacyl" : "cactus";
+      const y = type === "cactus" ? 200 : 150;
+      enemies.push(new Enemy(type, ctx.canvas.width, y));
+      lastSpawnTime = currentTime;
   }
 
-  // Update game state here if needed
-  drawGround(ctx, ctx.canvas.width, 250);
-  runner.update()
-  runner.run()
+  // Update and draw enemies
+  enemies = enemies.filter(enemy => {
+      enemy.update();
+      enemy.draw(ctx);
+      return enemy.x > -50; 
+  });
+
+  // Draw runner last (on top)
+  if (runner) {
+      runner.update();
+      runner.run();
+      runner.initialDraw(ctx);
+  }
+
+  // Draw score on top
+  ctx.font = '10px "Press Start 2P"';
+  ctx.fillText(`Hi ${String(Runner.hiScore).padStart(5, '0')}`, 900, 30);
+  ctx.fillText(`${String(Runner.score).padStart(5, '0')}`, 990, 30);
+
   requestAnimationFrame(() => gameLoop(ctx));
 }
 
