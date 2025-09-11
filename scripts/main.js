@@ -34,6 +34,9 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("keydown", (e) => {
   if (e.code === "Space") {
     if (runner) runner.jump();
+    // Play burp sound
+    const burpSound = new Audio("../assets/sounds/burp.mp3");
+    burpSound.play();
   }
 
   if (e.code === "ArrowDown") {
