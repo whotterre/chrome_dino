@@ -73,10 +73,27 @@ function gameLoop(ctx) {
       lastSpawnTime = currentTime;
   }
 
-  // Update and draw enemies
+  // Update and draw enemies, and check for collisions
   enemies = enemies.filter(enemy => {
       enemy.update();
       enemy.draw(ctx);
+      
+      // Check for collision
+      if (enemy.handleCollision(runner)) {
+          console.log("Collision detected!");
+          // Play sound effect 
+          const hitSound = new Audio("../assets/sounds/hit.mp3");
+          hitSound.play();
+          Runner.score = 0;
+          // Update high score if needed
+          Runner.hiScore = Math.max(Runner.hiScore, Runner.score);
+          // Remove all enemies
+          enemies = [];
+          // Reset runner position
+          Runner.px = 20;
+          return false;
+      }
+      
       return enemy.x > -50; 
   });
 
