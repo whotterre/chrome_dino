@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 
-// Events go here
+/* Desktop Events */
 document.addEventListener("keydown", (e) => {
   if (e.code === "Space") {
     if (runner) runner.jump();
@@ -43,6 +43,24 @@ document.addEventListener("keydown", (e) => {
     if (runner) runner.duck();
   }
 })
+
+document.addEventListener("keyup", (e) => {
+  if (e.code === "ArrowDown") {
+    if (runner) runner.standUp();
+  }
+})
+
+/* Mobile Events */
+document.addEventListener("touchstart", (e) => {
+  if (runner) runner.jump();
+  // Play burp sound
+  const burpSound = new Audio("../assets/sounds/burp.mp3");
+  burpSound.play();
+});
+
+document.addEventListener("touchend", (e) => {
+  if (runner) runner.standUp();
+});
 
 // Draw ground pattern at the bottom of the canvas
 function drawGround(ctx, canvasWidth, groundY) {
@@ -68,7 +86,8 @@ function gameLoop(ctx) {
   const currentTime = Date.now();
   if (currentTime - lastSpawnTime > SPAWN_INTERVAL) {
       const type = Math.random() < 0.5 ? "pterodacyl" : "cactus";
-      const y = type === "cactus" ? 200 : 150;
+      // Adjust Y positions - make pterodactyls fly higher and cacti stay at ground level
+      const y = type === "cactus" ? Runner.groundLevel : Runner.groundLevel - 80;
       enemies.push(new Enemy(type, ctx.canvas.width, y));
       lastSpawnTime = currentTime;
   }

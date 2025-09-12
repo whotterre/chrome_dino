@@ -9,6 +9,7 @@ class Runner {
     static endOfScreen = 1030
     static score = 0
     static hiScore = 0
+    static isDucking = false;
 
     constructor() {
         Runner.runnerImg.src = "../assets/dino_right_run.png"
@@ -40,11 +41,14 @@ class Runner {
     }
     // Move forward 
     run(ctx) {
-        // Switch between running frames
-        if (Math.floor(Date.now() / 100) % 2 === 0) {
-            Runner.runnerImg.src = "../assets/dino_right_run.png";
+        if (Runner.isDucking) {
+            Runner.runnerImg.src = "../assets/ducking_dino.png";
         } else {
-            Runner.runnerImg.src = "../assets/dino_left_run.png";
+            if (Math.floor(Date.now() / 100) % 2 === 0) {
+                Runner.runnerImg.src = "../assets/dino_right_run.png";
+            } else {
+                Runner.runnerImg.src = "../assets/dino_left_run.png";
+            }
         }
         Runner.score += 1
         Runner.px += 2
@@ -60,7 +64,10 @@ class Runner {
     }
 
     duck(){
-        Runner.runnerImg.src = "../assets/ducking_dino.png"
+        Runner.isDucking = true;
+    }
+    standUp(){
+        Runner.isDucking = false;
     }
 }
 

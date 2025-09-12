@@ -30,17 +30,41 @@ class Enemy {
     }
 
     handleCollision(runner){
-        const dinoWidth = Runner.runnerImg.naturalWidth * 0.8;
-        const dinoHeight = Runner.runnerImg.naturalHeight * 0.8;
-        const enemyWidth = this.image.naturalWidth * 0.8;
-        const enemyHeight = this.image.naturalHeight * 0.8;
+        // Get the current sprite dimensions
+        const scale = 0.8;
+        const hitboxReduction = Runner.isDucking ? 0.5 : 1.0; // Reduce hitbox height by 50% when ducking
+        
+        // Get the actual dimensions from the current images
+        const dinoWidth = Runner.runnerImg.width * scale;
+        const dinoHeight = Runner.runnerImg.height * scale * hitboxReduction;
+        const enemyWidth = this.image.width * scale;
+        const enemyHeight = this.image.height * scale;
+        
+        // When ducking, raise the bottom of the hitbox to match the visual ducking height
+        const dinoY = Runner.isDucking ? 
+            Runner.py + (Runner.runnerImg.height * scale * (1 - hitboxReduction)) : 
+            Runner.py;
 
-        // AABB collision detection using Runner's static properties
+        // Log collision info for debugging
+        if (this.type === 'pterodacyl') {
+            console.log('Collision Check:', {
+                isDucking: Runner.isDucking,
+                dinoPos: { x: Runner.px, y: dinoY },
+                dinoSize: { width: dinoWidth, height: dinoHeight },
+                enemyPos: { x: this.x, y: this.y },
+                enemySize: { width: enemyWidth, height: enemyHeight }
+            });
+        }
+
+        // Reduce the hitbox size slightly to be more forgiving
+        const hitboxPadding = 10;
+        
+        // AABB collision detection with adjusted hitbox
         if (
-            Runner.px < this.x + enemyWidth &&
-            Runner.px + dinoWidth > this.x &&
-            Runner.py < this.y + enemyHeight &&
-            Runner.py + dinoHeight > this.y
+            Runner.px + hitboxPadding < this.x + enemyWidth - hitboxPadding &&
+            Runner.px + dinoWidth - hitboxPadding > this.x + hitboxPadding &&
+            dinoY + hitboxPadding < this.y + enemyHeight - hitboxPadding &&
+            dinoY + dinoHeight - hitboxPadding > this.y + hitboxPadding
         ) {
             return true;
         } 
